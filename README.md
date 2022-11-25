@@ -1,13 +1,9 @@
-# Hw 2 CSE 6140
-## Author: Sravan Jayanthi
+# CSE 6140 Group 46 Final Project
+## Authors: Aravind Vengarai, Sravan Jayanthi, Alecsander Falc, Collin Hubbard
+
+This codebase contains the solution for the minimum vertex cover problem for some graph file. This method will return a solution file with an MVC and trace showing the algorithm's progress over time.
 To run this code, type the command:
 ```
-python .\src\run_experiments.py data\{graph_file}.gr data\{graph_file}.extra results\{graph_file}.txt
+'python src/run_mvc.py -inst <graph file name> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
 ```
-for any {graph_file} in the data\ folder
-
-To run the code to produce the graphs, type the command:
-```
-python .\src\compute_graph.py data\
-```
-for the data in the data\ folder
+for any `<graph file name>`, `alg` in the list of algorithms,  `<cutoff in seconds>`, and `<random seed>`
