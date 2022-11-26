@@ -63,7 +63,7 @@ if __name__ == "__main__":
         sol_dir = output_dir + ".sol"
         trace_dir = output_dir + ".trace"
         sol, trace = approxVC(graph, cutoff_limit, random_seed)
-        print(trace)
+        #print(trace)
         sol1 = open(sol_dir, 'w')
         sol1.write(str(len(sol)))
         sol1.write("\n")
