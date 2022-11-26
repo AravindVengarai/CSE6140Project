@@ -7,3 +7,5 @@ To run this code, type the command:
 'python src/run_mvc.py -inst <graph file name> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
 ```
 for any `<graph file name>`, `alg` in the list of algorithms,  `<cutoff in seconds>`, and `<random seed>`
+
+The solutions and trace files associated with the run can be found in the `solutions/` folder

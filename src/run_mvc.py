@@ -1,97 +1,67 @@
-import networkx as nx
-import argparse, os, time, sys
-"""
-This is an executing funciton that will run the project for CSE 6140.
-Arguments:
-    -init:  the graph file to be read
-    -alg:   the algorithm to be used (BnB, Approx, LS1, LS2)
-    -time:  the time limit option for certain algorithms
-    -seed:  the seed for certain algorithms
-To call this in command line, type 'python runproject.py -init [arg1] -alg [arg2] -time [arg3] -seed [arg4]
-Note that only the first two parameters are required for each algorithm
-"""
+import sys, os
+sys.path.append(os.getcwd())
 
-def makegraph(filename):
-    graphfile = open(filename,'r')
+import networkx as nx
+import argparse
+from src.branch import branch_and_bound
+
+
+# This file contians logic to run all algorithms (BnB, Approx, LS1, and LS2) to find a minimum vertex cover on a given graph
+
+"""
+Inputs:
+    -inst:  file location of the graph 
+    -alg:   the algorithm to be used (BnB, Approx, LS1, LS2)
+    -time:  the cutoff time limit
+    -seed:  the random seed for randomized algorithms
+To call this in command line, type 'python runproject.py -inst <graph file name> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
+"""
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-inst', default='data/dummy1.graph', help='filename option')
+    parser.add_argument('-alg', default='BnB',help='algorithm option option')
+    parser.add_argument('-time', default=20, type=float, help='time limit option')
+    parser.add_argument('-seed', default=0, type=float, help='seed option')
+    args = parser.parse_args()
+
+    file_name = args.inst
+    algorithm = args.alg
+    cutoff_limit = int(args.time)
+    random_seed = int(args.seed)
+
+    graphfile = open(file_name,'r')
     lines = graphfile.readlines()
     Vnum,Enum,n = lines[0].split()
-    G = nx.Graph()
+    graph = nx.Graph()
     for i, line in enumerate(lines):
         if i != 0:
             vals = line.split()
             for j in vals:
-                G.add_edge(int(i),int(j))
-    return G
+                graph.add_edge(int(i), int(j))
 
+    output_dir = "solutions/" + file_name.split("/")[-1] + "_" + algorithm + "_" + str(cutoff_limit)
 
-parser = argparse.ArgumentParser(description='Run CSE 6140 project')
-parser.add_argument('-inst', help='filename option')
-parser.add_argument('-alg', help='algorithm option option')
-parser.add_argument('-time', type=float, help='time limit option')
-parser.add_argument('-seed', type=float, help='seed option')
-args = parser.parse_args()
+    if (args.alg == 'BnB'):
+        sol_dir = output_dir+".sol"
+        trace_dir = output_dir+".trace"
+        sol, trace = branch_and_bound(graph, cutoff_limit)
+        sol1 = open(sol_dir,'w')
+        sol1.write(str(len(sol)))
+        sol1.write("\n")
+        sol1.write(','.join([str(s) for s in sol]))
+        sol1.close()
+        trace1 = open(trace_dir,'w')
+        for line in trace:
+            trace1.write(line)
+            trace1.write("\n")
+        trace1.close()
 
-
-if (args.alg == 'BnB'):
-    clipinst = args.inst
-    # LS1.Local_Search(G, args.time)
-    outputsol = '%s_%s_%s.sol' % (clipinst.split("/")[-1][:-6], args.alg,str(int(args.time)))
-    outputtrace = '%s_%s_%s.trace' % (clipinst.split("/")[-1][:-6], args.alg,str(int(args.time)))
-    bnb_run.bnb_main(G, args.time, outputsol, outputtrace)
-    # print outpath + outputsol
-    # output1 = open(outpath + outputsol,'w')
-    # # output1.write(str(len(sol))+"\n")
-    # output1.write(sol)
-    # output1.close()
-    # output2 = open(outpath + outputtrace,'w')
-    # output2.write(trace)
-    # output2.close()    
-
-elif (args.alg == 'Approx'):
-    # sys.exit('Error')
-    clipinst = args.inst
-    sol,trace = approx.MVC_approx(G)
-    outputsol = '%s_%s.sol' % (clipinst.split("/")[-1][:-6], args.alg)
-    outputtrace = '%s_%s.trace' % (clipinst.split("/")[-1][:-6], args.alg)
-    output1 = open(outpath + outputsol,'w')
-    output1.write(str(len(sol))+"\n")
-    solstring = ""
-    for i in sol:
-        solstring += str(i) + ","
-    output1.write(solstring[:-1])
-    output1.close()
-    output2 = open(outpath + outputtrace,'w')
-    output2.write(trace)
-    output2.close()
-
-elif (args.alg =='LS1'):
-    clipinst = args.inst
-    # LS1.Local_Search(G, args.time)
-    sol,trace = LS1.Local_Search(G, args.time)
-    outputsol = '%s_%s_%s_%s.sol' % (clipinst.split("/")[-1][:-6], args.alg,str(int(args.time)),str(int(args.seed)))
-    outputtrace = '%s_%s_%s_%s.trace' % (clipinst.split("/")[-1][:-6], args.alg,str(int(args.time)),str(int(args.seed)))
-    print outpath + outputsol
-    output1 = open(outpath + outputsol,'w')
-    # output1.write(str(len(sol))+"\n")
-    output1.write(sol)
-    output1.close()
-    output2 = open(outpath + outputtrace,'w')
-    output2.write(trace)
-    output2.close()
-
-elif (args.alg == 'LS2'):
-    clipinst = args.inst
-    # LS1.Local_Search(G, args.time)
-    sol,trace = LS2.Local_Search(G, args.time)
-    outputsol = '%s_%s_%s_%s.sol' % (clipinst.split("/")[-1][:-6], args.alg,str(int(args.time)),str(int(args.seed)))
-    outputtrace = '%s_%s_%s_%s.trace' % (clipinst.split("/")[-1][:-6], args.alg,str(int(args.time)),str(int(args.seed)))
-    output1 = open(outpath + outputsol,'w')
-    # output1.write(str(len(sol))+"\n")
-    output1.write(sol)
-    output1.close()
-    output2 = open(outpath + outputtrace,'w')
-    output2.write(trace)
-    output2.close()
-
-else:
-    sys.exit('Error')
+    elif (args.alg == 'Approx'):
+        output_dir += ("_" + random_seed)
+    
+    elif (args.alg == 'LS1'):
+        pass
+    
+    elif (args.alg == 'LS2'):
+        pass
