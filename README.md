@@ -9,3 +9,8 @@ To run this code, type the command:
 for any `<graph file name>`, `alg` in the list of algorithms,  `<cutoff in seconds>`, and `<random seed>`
 
 The solutions and trace files associated with the run can be found in the `solutions/` folder
+
+
+The dependencies that must be installed are as follows:
+- networkx
+

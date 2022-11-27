@@ -34,7 +34,7 @@ def helper(remaining_graph, num_nodes, current_index, partial_result, bestSol, s
         del bestSol[:]
         for node in partial_result:
             bestSol.append(node)
-        trace.append(f"{time() - start_time}, {str(len(bestSol))}")
+        trace.append(f"{round(time() - start_time, 2)}, {str(len(bestSol))}")
         return
     
     remaining_nodes = remaining_graph.nodes()
