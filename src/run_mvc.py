@@ -4,6 +4,7 @@ sys.path.append(os.getcwd())
 import networkx as nx
 import argparse
 from src.branch import branch_and_bound
+from src.approx import approxVC
 
 
 # This file contians logic to run all algorithms (BnB, Approx, LS1, and LS2) to find a minimum vertex cover on a given graph
@@ -36,8 +37,23 @@ def main(file_name, algorithm, cutoff_limit, random_seed):
             trace1.write("\n")
         trace1.close()
 
-    elif (algorithm == 'Approx'):
-        output_dir += ("_" + random_seed)
+    elif (args.alg == 'Approx'):
+        output_dir += ("_" + str(random_seed))
+        sol_dir = output_dir + ".sol"
+        trace_dir = output_dir + ".trace"
+        sol, trace = approxVC(graph, cutoff_limit, random_seed)
+        #print(trace)
+        sol1 = open(sol_dir, 'w')
+        sol1.write(str(len(sol)))
+        sol1.write("\n")
+        sol1.write(','.join([str(s) for s in sol]))
+        sol1.close()
+        trace1 = open(trace_dir, 'w')
+        for time, vertices in trace:
+            time = round(time, 2)
+            trace1.write(str(time) + ", " + str(vertices))
+            trace1.write("\n")
+        trace1.close()
     
     elif (algorithm == 'LS1'):
         pass
