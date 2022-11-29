@@ -10,30 +10,29 @@ Inputs:
     remaining_graph, num_nodes, current_index, partial_result, bestSol, start_time, cutoff_time, trace
 """
 def helper(remaining_graph, num_nodes, current_index, partial_result, bestSol, start_time, cutoff_time, trace):
-    # Cutoff Branch and Bound for given time limit
-    if time() - start_time > cutoff_time:
-        raise RuntimeError
-
-    # Define lower bound as the number of edges generated from a maximal matching
+    # Define lower bound as the maximal matching for the corresponding subgraph
     # Input 
     #   graph: the remaining graph to calculate maximal matching
     def lower_bound(graph):
-        lower_b = 0
         graph = deepcopy(graph)
-        while list(graph.edges()) != []:
+        counter = 0
+        while len(graph.edges()) > 0:
             edge = list(graph.edges())[-1]
             graph.remove_nodes_from([edge[0],edge[1]])
-            lower_b = lower_b + 1
-        return lower_b
+            counter += 1
+        return counter
     
+    # Cutoff Branch and Bound for given time limit
+    if time() > start_time + cutoff_time:
+        raise RuntimeError
     # Check lower bound to prune
-    if len(partial_result) + lower_bound(remaining_graph) >= len(bestSol):
+    curr_vc = len(partial_result)
+    if curr_vc >= len(bestSol) - lower_bound(remaining_graph):
         return
     # Check if there are no more edges in remaining_graph
-    elif list(remaining_graph.edges()) == []:
+    elif len(remaining_graph.edges()) == 0:
         del bestSol[:]
-        for node in partial_result:
-            bestSol.append(node)
+        bestSol.extend(partial_result)
         trace.append(f"{round(time() - start_time, 2)}, {str(len(bestSol))}")
         return
     
@@ -42,11 +41,9 @@ def helper(remaining_graph, num_nodes, current_index, partial_result, bestSol, s
     for node in range(current_index, num_nodes + 1):
         if node not in remaining_nodes:
             continue
-        partial_result.append(node)
         expand_graph = deepcopy(remaining_graph)
         expand_graph.remove_node(node)
-        helper(expand_graph, num_nodes, node + 1, partial_result, bestSol, start_time, cutoff_time, trace)
-        del partial_result[-1]
+        helper(expand_graph, num_nodes, node + 1, partial_result + [node], bestSol, start_time, cutoff_time, trace)
 
 
 """
