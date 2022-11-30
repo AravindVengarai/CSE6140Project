@@ -31,7 +31,9 @@ def helper(remaining_graph, num_nodes, current_index, partial_result, bestSol, s
         return
     # Check if there are no more edges in remaining_graph
     elif len(remaining_graph.edges()) == 0:
-        del bestSol[:]
+        exis_sol = len(bestSol)
+        for _ in range(exis_sol):
+            bestSol.pop()
         bestSol.extend(partial_result)
         trace.append(f"{round(time() - start_time, 2)}, {str(len(bestSol))}")
         return
@@ -42,7 +44,7 @@ def helper(remaining_graph, num_nodes, current_index, partial_result, bestSol, s
         if node not in remaining_nodes:
             continue
         expand_graph = deepcopy(remaining_graph)
-        expand_graph.remove_node(node)
+        expand_graph.remove_nodes_from([node])
         helper(expand_graph, num_nodes, node + 1, partial_result + [node], bestSol, start_time, cutoff_time, trace)
 
 
