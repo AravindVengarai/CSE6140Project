@@ -6,9 +6,7 @@ Created on Thu Dec  1 13:41:17 2022
 """
 import time
 import random
-import numpy as np
-import copy
-import networkx as nx          
+import copy        
             
 def ConstructVC(inputGraph):
     C = list()
