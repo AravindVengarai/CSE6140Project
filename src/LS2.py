@@ -115,9 +115,6 @@ def local_search_2(inputGraph, cutoffTime, seed):
             if inputGraph.edges()[u, v]['covered'] == False:
                 uncovered.append([u, v])
         if len(uncovered) > 0:
-
-            #print('uncovered')
-            #print(uncovered)
             
             maxVertexValue = inputGraph.nodes()[C[0]]['dscore']
             maxVertex = C[0]
@@ -136,9 +133,7 @@ def local_search_2(inputGraph, cutoffTime, seed):
                 if inputGraph.nodes()[ch]['age'] > maxAge:
                     maxAge = inputGraph.nodes()[ch]['age']
                     maxVertex = ch
-            #maxVertex = vertexChoices[choice]
-            #print('Remove from C')
-            #print(maxVertex)
+
             C.remove(maxVertex)
             inputGraph.nodes()[maxVertex]['age'] = 0
             inputGraph.nodes()[maxVertex]['confChange'] = 0
@@ -159,8 +154,7 @@ def local_search_2(inputGraph, cutoffTime, seed):
                 else:
                     selection  = chosenEdge[1]
             C.append(selection)
-            #print('add to C')
-            #print(selection)
+
             for a in inputGraph.adj[selection]:
                 inputGraph.nodes()[a]['confChange'] = 1
             
