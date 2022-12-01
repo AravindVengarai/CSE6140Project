@@ -38,7 +38,6 @@ def main(file_name, algorithm, cutoff_limit, random_seed):
         trace1.close()
 
     elif (args.alg == 'Approx'):
-        output_dir += ("_" + str(random_seed))
         sol_dir = output_dir + ".sol"
         trace_dir = output_dir + ".trace"
         sol, trace = approxVC(graph, cutoff_limit, random_seed)

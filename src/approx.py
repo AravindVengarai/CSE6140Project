@@ -23,15 +23,6 @@ def approxVC(inputGraph, cutoffTime, randomSeed):
         vertexCover = set()
 
         while len(edgeSet) > 0 and time.time() - startTime < cutoffTime:
-            """
-            while time.time() - startTime < cutoffTime:
-                u = random.randint(0, n)
-                v = random.randint(0, n)
-
-                if (u, v) in edgeSet:
-                    edgeSet.remove((u, v))
-                    break
-            """
 
             if len(vertexCover) > minVertices:
                 break
@@ -40,8 +31,6 @@ def approxVC(inputGraph, cutoffTime, randomSeed):
             random.shuffle(lst)
             u, v = lst.pop()
             edgeSet = set(lst)
-
-            # u, v = edgeSet.pop()
 
             if time.time() - startTime >= cutoffTime:
                 break
