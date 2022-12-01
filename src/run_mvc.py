@@ -5,6 +5,7 @@ import networkx as nx
 import argparse
 from src.branch import branch_and_bound
 from src.approx import approxVC
+from LS2 import local_search_2
 
 
 # This file contians logic to run all algorithms (BnB, Approx, LS1, and LS2) to find a minimum vertex cover on a given graph
@@ -37,6 +38,7 @@ def main(file_name, algorithm, cutoff_limit, random_seed):
             trace1.write("\n")
         trace1.close()
 
+
     elif (args.alg == 'Approx'):
         sol_dir = output_dir + ".sol"
         trace_dir = output_dir + ".trace"
@@ -55,9 +57,24 @@ def main(file_name, algorithm, cutoff_limit, random_seed):
         trace1.close()
     
     elif (algorithm == 'LS1'):
+        
         pass
     
     elif (algorithm == 'LS2'):
+        output_dir += ("_" + str(random_seed))
+        sol_dir = output_dir + ".sol"
+        trace_dir = output_dir + ".trace"
+        sol, trace = local_search_2(graph, cutoff_limit, random_seed)
+        sol1 = open(sol_dir, 'w')
+        sol1.write(str(len(sol)))
+        sol1.write("\n")
+        sol1.write(','.join([str(s) for s in sol]))
+        sol1.close()
+        trace1 = open(trace_dir, 'w')
+        for line in trace:
+            trace1.write(line)
+            trace1.write("\n")
+        trace1.close()
         pass
 
 
@@ -67,7 +84,7 @@ Inputs:
     -alg:   the algorithm to be used (BnB, Approx, LS1, LS2)
     -time:  the cutoff time limit
     -seed:  the random seed for randomized algorithms
-To call this in command line, type 'python runproject.py -inst <graph file name> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
+To call this in command line, type 'python 
 """
 if __name__ == "__main__":
 
@@ -82,5 +99,3 @@ if __name__ == "__main__":
     algorithm = args.alg
     cutoff_limit = int(args.time)
     random_seed = int(args.seed)
-
-    main(file_name, algorithm, cutoff_limit, random_seed)
