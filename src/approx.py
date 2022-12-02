@@ -23,15 +23,6 @@ def approxVC(inputGraph, cutoffTime, randomSeed):
         vertexCover = set()
 
         while len(edgeSet) > 0 and time.time() - startTime < cutoffTime:
-            """
-            while time.time() - startTime < cutoffTime:
-                u = random.randint(0, n)
-                v = random.randint(0, n)
-
-                if (u, v) in edgeSet:
-                    edgeSet.remove((u, v))
-                    break
-            """
 
             if len(vertexCover) > minVertices:
                 break
@@ -41,26 +32,26 @@ def approxVC(inputGraph, cutoffTime, randomSeed):
             u, v = lst.pop()
             edgeSet = set(lst)
 
-            # u, v = edgeSet.pop()
-
             if time.time() - startTime >= cutoffTime:
                 break
             edgeSet.remove((v, u))
-            vertexCover.add(u)
-            vertexCover.add(v)
-
-            # remove all edges adjacent to nodes u, and v
-            for neighbor in inputGraph[u]:
-                if (u, neighbor) in edgeSet:
-                    edgeSet.remove((u, neighbor))
-                if (neighbor, u) in edgeSet:
-                    edgeSet.remove((neighbor, u))
-
-            for neighbor in inputGraph[v]:
-                if (v, neighbor) in edgeSet:
-                    edgeSet.remove((v, neighbor))
-                if (neighbor, v) in edgeSet:
-                    edgeSet.remove((neighbor, v))
+            # Choose the vertex with the higher degree
+            if (inputGraph.degree[u] > inputGraph.degree[v]):
+                vertexCover.add(u)
+                # Remove all edges connected to vertex u
+                for neighbor in inputGraph[u]:
+                    if (u, neighbor) in edgeSet:
+                        edgeSet.remove((u, neighbor))
+                    if (neighbor, u) in edgeSet:
+                        edgeSet.remove((neighbor, u))
+            else:
+                vertexCover.add(v)
+                # Remove all edges connected to vertex v
+                for neighbor in inputGraph[v]:
+                    if (v, neighbor) in edgeSet:
+                        edgeSet.remove((v, neighbor))
+                    if (neighbor, v) in edgeSet:
+                        edgeSet.remove((neighbor, v))
 
         # check if we have found a better solution.
         # if we have, then update our solution trace, time to better solution, and final vertex cover
@@ -71,9 +62,3 @@ def approxVC(inputGraph, cutoffTime, randomSeed):
             solutionTrace.append((timetoBetterSoln, minVertices))
 
     return finalVertexCover, solutionTrace
-
-
-
-
-
-
