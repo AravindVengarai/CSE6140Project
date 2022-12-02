@@ -61,7 +61,7 @@ def helper(graph, partial_result, bestSol, start_time, cutoff_time, trace, degli
     if len(partial_result) < len(bestSol):
         del bestSol[:]
         bestSol.extend(partial_result)
-        trace.append(f"{round(time() - start_time, 2)}, {str(len(bestSol))}")
+        trace.append((round(time() - start_time, 2), len(bestSol)))
     # Check if there are no more edges in remaining_graph
     # if len(remaining_graph.edges()) == 0:
     #     exis_sol = len(bestSol)
