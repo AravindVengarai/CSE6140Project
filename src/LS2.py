@@ -20,29 +20,17 @@ def ConstructVC(inputGraph):
     return C
         
 
-def Cost(graph, C):
-    costGraph = copy.deepcopy(graph)
+def Cost(graph, v):
     cost = 0
-    for u, v in costGraph.edges():
-        costGraph.edges()[u, v]['covered'] = False
-    for c in C:
-        for a in costGraph.adj[c]:
-            costGraph.edges()[c, a]['covered'] = True
-    for u, v in costGraph.edges():
-        if costGraph.edges()[u, v]['covered'] == True:
-            cost = cost + costGraph.edges()[u, v]['weight']
+    if v >= 0:
+        for a in graph.adj[v]:
+            cost = cost + 1
     return cost
 
 def dscore(graph, C, v):
-    testC = C.copy()
-    firstCost = Cost(graph, testC)
-    if testC.count(v) == 0:
-        testC.append(v)
-        secondCost = Cost(graph,testC)
-    else:
-        testC.remove(v)
-        secondCost = Cost(graph,testC)
-    
+    firstCost = Cost(graph, -1)
+
+    secondCost = Cost(graph,v)
     dscore = firstCost - secondCost
     return dscore
 
