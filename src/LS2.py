@@ -11,8 +11,9 @@ import networkx as nx
             
 def ConstructVC(inputGraph):
     C = list()
-    for u, v in inputGraph.edges():
-        inputGraph.edges()[u, v]['covered'] = False
+    #for u, v in inputGraph.edges():
+    #    inputGraph.edges()[u, v]['covered'] = False
+    nx.set_edge_attributes(inputGraph, False, "covered")
     for u,v in inputGraph.edges():
         if inputGraph.edges()[u,v]['covered'] == False:
             C.append(u)
