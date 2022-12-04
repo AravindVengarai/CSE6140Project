@@ -7,6 +7,7 @@ Created on Thu Dec  1 13:41:17 2022
 import time
 import random
 import copy        
+import networkx as nx
             
 def ConstructVC(inputGraph):
     C = list()
@@ -51,9 +52,11 @@ def local_search_2(inputGraph, cutoffTime, seed):
     rho = 0.3
 
     # Add a covered attribute to each of the edges
-    for u, v in inputGraph.edges():
-        inputGraph.edges()[u, v]['covered'] = False
-        inputGraph.edges()[u, v]['weight'] = 1
+    #for u, v in inputGraph.edges():
+    #    inputGraph.edges()[u, v]['covered'] = False
+    #    inputGraph.edges()[u, v]['weight'] = 1
+    nx.set_edge_attributes(inputGraph, False, "covered")
+    nx.set_edge_attributes(inputGraph, 1, "weight")
         
 
     # Initialize dscore, age, confChange for each vertex
@@ -88,14 +91,18 @@ def local_search_2(inputGraph, cutoffTime, seed):
             C.remove(maxVertex)
             inputGraph.nodes()[maxVertex]['age'] = 0
             
-            for u, v in inputGraph.edges():
-                inputGraph.edges()[u,v]['covered'] = False
-                if (C.count(u) > 0):
-                    for a in inputGraph.adj[u]:
-                        inputGraph.edges()[u, a]['covered'] = True
-                elif (C.count(v) > 0):
-                    for a in inputGraph.adj[v]:
-                        inputGraph.edges()[v, a]['covered'] = True
+            #for u, v in inputGraph.edges():
+            #    inputGraph.edges()[u,v]['covered'] = False
+            #    if (C.count(u) > 0):
+            #        for a in inputGraph.adj[u]:
+            #            inputGraph.edges()[u, a]['covered'] = True
+            #    elif (C.count(v) > 0):
+            #        for a in inputGraph.adj[v]:
+            #            inputGraph.edges()[v, a]['covered'] = True
+            nx.set_edge_attributes(inputGraph, False, "covered")
+            for c in C:
+                for a in inputGraph.adj[c]:
+                    inputGraph.edges()[c, a]['covered'] = True
 
         uncovered = []
         
@@ -150,20 +157,29 @@ def local_search_2(inputGraph, cutoffTime, seed):
             covered = True
                 
             # Set all edges to uncovered, update covered edges, add 1 to the weight of each uncovered edge
-            for u, v in inputGraph.edges():
-                inputGraph.edges()[u,v]['covered'] = False
-                if (C.count(u) > 0):
-                    for a in inputGraph.adj[u]:
-                        inputGraph.edges()[u, a]['covered'] = True
-                elif (C.count(v) > 0):
-                    for a in inputGraph.adj[v]:
-                        inputGraph.edges()[v, a]['covered'] = True
-                else:
-                    inputGraph.edges()[u,v]['weight'] = inputGraph.edges()[u,v]['weight'] + 1
+            #for u, v in inputGraph.edges():
+            #    inputGraph.edges()[u,v]['covered'] = False
+            #    if (C.count(u) > 0):
+            #        for a in inputGraph.adj[u]:
+            #            inputGraph.edges()[u, a]['covered'] = True
+            #    elif (C.count(v) > 0):
+            #        for a in inputGraph.adj[v]:
+            #            inputGraph.edges()[v, a]['covered'] = True
+            #    else:
+            #        inputGraph.edges()[u,v]['weight'] = inputGraph.edges()[u,v]['weight'] + 1
                 
                 # If any edge is not covered set covered to False
+            #    if inputGraph.edges()[u,v]['covered'] == False:
+            #        covered = False
+                    
+            nx.set_edge_attributes(inputGraph, False, "covered")
+            for c in C:
+                for a in inputGraph.adj[c]:
+                    inputGraph.edges()[c, a]['covered'] = True
+            for u, v in inputGraph.edges():
                 if inputGraph.edges()[u,v]['covered'] == False:
                     covered = False
+                    inputGraph.edges()[u,v]['weight'] = inputGraph.edges()[u,v]['weight'] + 1
             
 
             totalWeight = 0
